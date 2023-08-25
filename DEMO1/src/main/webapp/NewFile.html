@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Food Order</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Function to handle the "Order" button click
+        function orderFood() {
+        	document.getElementById("order").addEventListener("click", function() {
+                var form = document.getElementById("orderForm");
+                var formData = new FormData(form);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/DEMO1/add", true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        console.log(xhr.responseText);
+                    }
+                };
+                xhr.send(formData);
+            });
+        }
+        
+        // Function to handle the "Menu" button click
+        function viewMenu() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/DEMO1/menu", true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var menuData = xhr.responseText;
+                    console.log(menuData);
+                }
+            };
+            xhr.send();
+        }
+        
+        // Function to handle the "Reset" button click using AJAX
+        function resetFormAJAX() {
+            $.ajax({
+                url: "/DEMO1/reset",
+                type: "POST",
+                success: function(response) {
+                    console.log(response);
+                    // Handle the response if needed
+                },
+                error: function(error) {
+                    console.log("Error resetting form:", error);
+                }
+            });
+        }
+        
+        // Function to handle the "Delete" button click using AJAX
+        function deleteOrder() {
+            var orderID = $("input[name='orderid']").val();
+            
+            $.ajax({
+                url: "/DEMO1/delete",
+                type: "DELETE",
+                data: { orderid: orderID },
+                success: function(response) {
+                    console.log(response);
+                 
+                },
+                error: function(error) {
+                    console.log("Error deleting order:", error);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Food Order</h1>
+    <form id="orderForm" action="/DEMO1/add" method="post"> 
+        <table>
+            <tr>
+                <td>ID:</td>
+                <td><input type="number" name="orderid"></td>
+            </tr>
+            <tr>
+                <td>Food Item:</td>
+                <td><input type="text" name="foodItem"></td>
+            </tr>
+            <tr>
+                <td>Quantity:</td>
+                <td><input type="number" name="quantity"></td>
+            </tr>
+            <tr>
+                <td><button type="button" id="order" onclick="orderFood()">Order</button></td>
+                <td><button type="button" id="menu" onclick="viewMenu()">Menu</button></td>
+            </tr>
+            <tr>
+                <td><button type="button" id="Reset" onclick="resetFormAJAX()">Reset</button></td>
+                <td><button type="button" id="Delete" onclick="deleteOrder()">Delete</button></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
